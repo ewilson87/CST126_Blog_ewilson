@@ -1,9 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: ewwil
+ * CST-126 Blog project
+ * server.php version 1.0
+ * Program Author: Evan Wilson
  * Date: 10/9/2018
- * Time: 4:29 PM
+ * The main logic in connecting to the database for registration and login
+ * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+ * Site was used in initial development of application with many changes implemented.
  */
 
 session_start();
@@ -16,13 +19,13 @@ $email    = "";
 $datejoined = "";
 $errors = array();
 
-//mysql://b1d8c8c0bbb430:c95a08da@us-cdbr-iron-east-01.cleardb.net/heroku_900c33d3127dd0b?reconnect=true
+//database login details obtained from GCU Hosting Solution (Heroku)
 $host = 'us-cdbr-iron-east-01.cleardb.net';
 $user = 'b1d8c8c0bbb430';
 $dbpassword = 'c95a08da';
 $database = 'heroku_900c33d3127dd0b';
 
-// connect to the database
+// connect to the database using above login details
 $db = mysqli_connect($host, $user, $dbpassword, $database);
 
 // REGISTER USER
@@ -35,8 +38,8 @@ if (isset($_POST['reg_user'])) {
     $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
     $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
 
-    // form validation: ensure that the form is correctly filled ...
-    // by adding (array_push()) corresponding error unto $errors array
+    // form validation: ensure that the form is correctly filled out
+    // by adding (array_push()) corresponding error into $errors array
     if (empty($username)) { array_push($errors, "Username is required"); }
     if (empty($fname)) { array_push($errors, "First name is required"); }
     if (empty($lname)) { array_push($errors, "Last name is required"); }
@@ -63,12 +66,12 @@ if (isset($_POST['reg_user'])) {
         }
     }
 
-    // Finally, register user if there are no errors in the form
+    // Register user if there are no errors, table also creates a default current date for when all users are registered to track when they joined
     if (count($errors) == 0) {
         $password = $password_1;
 
-        $query = "INSERT INTO accounts (username, password, fname, lname, email) 
-  			  VALUES('$username', '$password', '$fname', '$lname', '$email')";
+        $query = "INSERT INTO accounts (username, password, fname, lname, email, datejoined) 
+  			  VALUES('$username', '$password', '$fname', '$lname', '$email', CURRENT_DATE)";
         mysqli_query($db, $query);
         $_SESSION['username'] = $username;
         $_SESSION['success'] = "You are now logged in";
@@ -88,8 +91,9 @@ if (isset($_POST['login_user'])) {
         array_push($errors, "Password is required");
     }
 
+    //Currently displays username upon logging in. Might change to display first name in the future.
+    //Queries SQL to verify a match for username and password
     if (count($errors) == 0) {
-        $password = $password;
         $query = "SELECT * FROM accounts WHERE username='$username' AND password='$password'";
         $results = mysqli_query($db, $query);
         if (mysqli_num_rows($results) == 1) {

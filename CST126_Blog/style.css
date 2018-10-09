@@ -1,3 +1,13 @@
+/**
+ * CST-126 Blog project
+ * style.css version 1.0
+ * Program Author: Evan Wilson
+ * Date: 10/9/2018
+ * CSS style page for proper formatting of the website
+ * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+ * Site was used in initial development of application with many changes implemented.
+ */
+
 * {
     margin: 0px;
     padding: 0px;
@@ -37,7 +47,7 @@ form, .content {
 .input-group input {
     height: 30px;
     width: 300px;
-    padding: 5px 100px;
+    padding: 5px 10px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid gray;
@@ -61,7 +71,7 @@ form, .content {
     text-align: left;
 }
 .success {
-    color: #00e304;
+    color: #000000;
     background: #dff0d8;
     border: 1px solid #00E304;
     margin-bottom: 20px;

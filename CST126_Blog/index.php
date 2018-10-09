@@ -1,12 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: ewwil
+ * CST-126 Blog project
+ * register.php version 1.0
+ * Program Author: Evan Wilson
  * Date: 10/9/2018
- * Time: 4:33 PM
-**/
+ * Greeting/home page once logged in. Logic to prevent access without logging in, and to 
+ * greet the user by username
+ * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+ * Site was used in initial development of application with many changes implemented.
+ */
+
+ //initializes session data
   session_start();
 
+  //prevents anyone accessing this page without logging in first
   if (!isset($_SESSION['username'])) {
   	$_SESSION['msg'] = "You must log in first";
   	header('location: login.php');
@@ -47,6 +54,5 @@
     	<p> <a href="index.php?logout='1'" style="color: #0600c2;">LOGOUT</a> </p>
     <?php endif ?>
 </div>
-
 </body>
 </html>

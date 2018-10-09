@@ -1,9 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: ewwil
+ * CST-126 Blog project
+ * register.php version 1.0
+ * Program Author: Evan Wilson
  * Date: 10/9/2018
- * Time: 4:28 PM
+ * HTML and PHP use in formatting and display of registration page and associated errors
+ * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+ * Site was used in initial development of application with many changes implemented.
  */
 include('server.php') ?>
 <!DOCTYPE html>
@@ -17,7 +20,7 @@ include('server.php') ?>
 </head>
 <body>
 
-
+<!-- Basic input options, use flex-containers and input-groups for display formatting -->
 <form method="post" action="register.php">
     <?php include('errors.php'); ?>
     <div class="flex-container">

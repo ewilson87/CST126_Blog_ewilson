@@ -1,9 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: ewwil
+ * CST-126 Blog project
+ * login.php version 1.0
+ * Program Author: Evan Wilson
  * Date: 10/9/2018
- * Time: 4:31 PM
+ * HTML and PHP use in formatting and display of login page and associated errors
+ * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+ * Site was used in initial development of application with many changes implemented.
  */
 include('server.php') ?>
 <!DOCTYPE html>
