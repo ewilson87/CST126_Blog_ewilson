@@ -13,11 +13,11 @@ include('server.php') ?>
 <html>
 <head>
     <title>CST 126 Blog</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css?<?php echo time(); ?>">
 </head>
 <body>
 <div class="header">
-    <h2>Login</h2>
+    <h2>Login to CST-126 Blog</h2>
 </div>
 
 <form method="post" action="login.php">
@@ -25,13 +25,13 @@ include('server.php') ?>
     <div class="flex-container">
         <div class="input-group">
             <label>Username</label>
-            <input type="text" name="username" >
+            <input type="text" name="username" required="true">
         </div>
     </div>
     <div class="flex-container">
         <div class="input-group">
             <label>Password</label>
-            <input type="password" name="password">
+            <input type="password" name="password" required="true">
         </div>
     </div>
     <div class="flex-container">
@@ -39,11 +39,13 @@ include('server.php') ?>
             <button type="submit" class="btn" name="login_user">Login</button>
         </div>
     </div>
-    <div class="flex-container">
-        <p>
-            New to the blog? <a href="register.php">Sign up</a>
-        </p>
-    </div>
 </form>
+<div class="footer">
+
+    <p>
+        New to the blog? <a href="register.php" style="color: white;">Sign up</a>
+    </p>
+
+</div>
 </body>
 </html>

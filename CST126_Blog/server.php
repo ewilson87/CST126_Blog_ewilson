@@ -68,8 +68,7 @@ if (isset($_POST['reg_user'])) {
 
     // Register user if there are no errors, table also creates a default current date for when all users are registered to track when they joined
     if (count($errors) == 0) {
-        $password = $password_1;
-
+        $password = md5($password_1); //encrypts password before saving to database
         $query = "INSERT INTO accounts (username, password, fname, lname, email, datejoined) 
   			  VALUES('$username', '$password', '$fname', '$lname', '$email', CURRENT_DATE)";
         mysqli_query($db, $query);
@@ -94,6 +93,7 @@ if (isset($_POST['login_user'])) {
     //Currently displays username upon logging in. Might change to display first name in the future.
     //Queries SQL to verify a match for username and password
     if (count($errors) == 0) {
+        $password = md5($password); //encrypts password to compare to database
         $query = "SELECT * FROM accounts WHERE username='$username' AND password='$password'";
         $results = mysqli_query($db, $query);
         if (mysqli_num_rows($results) == 1) {
@@ -105,4 +105,19 @@ if (isset($_POST['login_user'])) {
         }
     }
 }
+
+// load forum
+if (isset($_POST['main_forum'])) {
+        $query = "SELECT title, post_time from forum f1 where post_time = (select MAX(post_time) from forum f2 where f1.title = f2.title) group by title";
+        $results = mysqli_query($db, $query) or die("Bad Query: $query");
+
+        $mainForum = '';
+
+            while ($row = mysqli_fetch_assoc($results)) {
+                $mainForum = $mainForum.'<tr onclick="javascript:rowClick(this)">'."<td>{$row['title']}</td><td>{$row['post_time']}</td></tr>"; //change the rowClick(this) to somehow direct to new page based on title
+            }
+
+        $_SESSION['mainforum'] = $mainForum;
+    }
+
 ?>

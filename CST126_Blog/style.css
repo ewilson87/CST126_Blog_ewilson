@@ -8,7 +8,7 @@
  * Site was used in initial development of application with many changes implemented.
  */
 
-* {
+ * {
     margin: 0px;
     padding: 0px;
 }
@@ -28,13 +28,27 @@ body {
     border-radius: 10px 10px 0px 0px;
     padding: 20px;
 }
+
+.footer {
+    width: 90%;
+    margin: 0px auto 0px;
+    color: white;
+    background: #466ac6;
+    text-align: center;
+    border: 1px solid #B0C4DE;
+    border-top: none;
+    border-radius: 0px 0px 10px 10px;
+    padding: 20px;
+}
+
 form, .content {
     width: 90%;
     margin: 0px auto;
     padding: 20px;
     border: 1px solid #B0C4DE;
     background: white;
-    border-radius: 0px 0px 10px 10px;
+
+    border-radius: 0px 0px 0px 0px;
 }
 .input-group {
     margin: 10px 100px 10px 100px;
@@ -54,7 +68,7 @@ form, .content {
 }
 .btn {
     padding: 10px;
-    font-size: 15px;
+    font-size: 20px;
     color: white;
     background: #466ac6;
     border: none;
@@ -68,13 +82,14 @@ form, .content {
     color: #F60010;
     background: #f2dede;
     border-radius: 5px;
-    text-align: left;
+    text-align: center;
 }
 .success {
     color: #000000;
     background: #dff0d8;
     border: 1px solid #00E304;
     margin-bottom: 20px;
+    text-align: center;
 }
 .flex-container {
     display: flex;
@@ -82,5 +97,27 @@ form, .content {
     justify-content: center;
     align-items: center;
     align-content: space-between
-    
-  }
+
+}
+.center {
+    text-align: center;
+}
+
+div.a {
+    text-align: left;
+}
+
+div.b {
+    text-align: right;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: left;
+}
+tr:hover {background-color: #f5f5f5;}
