@@ -17,6 +17,8 @@ $fname    = "";
 $lname    = "";
 $email    = "";
 $datejoined = "";
+$topic = "";
+$message = "";
 $errors = array();
 
 //database login details obtained from GCU Hosting Solution (Heroku)
@@ -72,7 +74,11 @@ if (isset($_POST['reg_user'])) {
         $query = "INSERT INTO accounts (username, password, fname, lname, email, datejoined) 
   			  VALUES('$username', '$password', '$fname', '$lname', '$email', CURRENT_DATE)";
         mysqli_query($db, $query);
+        //sets session variables for user for possible use in the future
         $_SESSION['username'] = $username;
+        $_SESSION['fname'] = $fname;
+        $_SESSION['lname'] = $lname;
+        $_SESSION['email'] = $email;
         $_SESSION['success'] = "You are now logged in";
         header('location: index.php');
     }
@@ -96,7 +102,13 @@ if (isset($_POST['login_user'])) {
         $password = md5($password); //encrypts password to compare to database
         $query = "SELECT * FROM accounts WHERE username='$username' AND password='$password'";
         $results = mysqli_query($db, $query);
+        
         if (mysqli_num_rows($results) == 1) {
+            $row=mysqli_fetch_array($results);
+            //sets session variables for user for possible use in the future
+            $_SESSION['fname'] = $row['fname'];
+            $_SESSION['lname'] = $row['lname'];
+            $_SESSION['email'] = $row['email'];
             $_SESSION['username'] = $username;
             $_SESSION['success'] = "You are now logged in";
             header('location: index.php');
@@ -107,17 +119,76 @@ if (isset($_POST['login_user'])) {
 }
 
 // load forum
-if (isset($_POST['main_forum'])) {
-        $query = "SELECT title, post_time from forum f1 where post_time = (select MAX(post_time) from forum f2 where f1.title = f2.title) group by title";
+if (isset($_POST['main_forum']) or isset($_SESSION['refresh'])) {
+        $query = "SELECT title, post_time from forum f1 where post_time = (select MAX(post_time) from forum f2 where f1.title = f2.title) group by title order by post_time desc";
         $results = mysqli_query($db, $query) or die("Bad Query: $query");
-
+        unset($_SESSION['refresh']);
         $mainForum = '';
 
             while ($row = mysqli_fetch_assoc($results)) {
-                $mainForum = $mainForum.'<tr onclick="javascript:rowClick(this)">'."<td>{$row['title']}</td><td>{$row['post_time']}</td></tr>"; //change the rowClick(this) to somehow direct to new page based on title
+                $mainForum = $mainForum.'<tr onclick="javascript:rowClick(this)">'."<td>{$row['title']}</td><td>{$row['post_time']}</td></tr>"; 
             }
 
         $_SESSION['mainforum'] = $mainForum;
     }
 
+// load topic forum
+if (isset($_SESSION['topic'])) {
+        $title = $_SESSION['topic'];
+        $_SESSION['temptopic'] = $title;
+        unset($_SESSION['topic']);
+        $query = "SELECT * from forum where title = '$title' order by post_time desc";
+        $results = mysqli_query($db, $query) or die("Bad Query: $query");
+
+        $topicforum = '';
+
+            while ($row = mysqli_fetch_assoc($results)) {
+                $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+                                           <td>{$row['message']}</td>
+                                           <td style='text-align:center'>{$row['post_time']}</td></tr>"; 
+            }
+
+        $_SESSION['topicforum'] = $topicforum;
+    }
+
+    // New topic post
+if (isset($_POST['new_topic2'])) {
+    // receive all input values from the form
+    $topic = mysqli_real_escape_string($db, $_POST['topic']);
+    $message = mysqli_real_escape_string($db, $_POST['message']);
+    $username = $_SESSION['username'];
+    //ensure errors array is empty before possible errors pushed
+    $errors = array();
+    // form validation: ensure that the form is correctly filled out
+    // by adding (array_push()) corresponding error into $errors array
+    if (empty($topic)) { array_push($errors, "Topic is required"); }
+    if (empty($message)) { array_push($errors, "Message is required"); }
+
+    if (count($errors) == 0) {
+        $query = "INSERT INTO forum (username, title, message, post_time) values ('$username', '$topic', '$message', CURRENT_TIMESTAMP)";
+        $results = mysqli_query($db, $query);
+        header("location: home_forum.php?newpost='1'");
+    }
+
+}
+
+    // Post reply to existing topic
+    if (isset($_POST['reply_topic'])) {
+        // receive all input values from the form
+        $topic = $_SESSION['temptopic'];
+        $message = mysqli_real_escape_string($db, $_POST['message']);
+        $username = $_SESSION['username'];
+        //ensure errors array is empty before possible errors pushed
+        $errors = array();
+        // form validation: ensure that the form is correctly filled out
+        // by adding (array_push()) corresponding error into $errors array
+        if (empty($message)) { array_push($errors, "Message is required"); }
+    
+        if (count($errors) == 0) {
+            $query = "INSERT INTO forum (username, title, message, post_time) values ('$username', '$topic', '$message', CURRENT_TIMESTAMP)";
+            $results = mysqli_query($db, $query);
+            header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
+        }
+    
+    }
 ?>

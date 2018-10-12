@@ -1,7 +1,7 @@
 <?php
 /**
  * CST-126 Blog project
- * home_forum.php version 1.0
+ * new_topic.php version 1.0
  * Program Author: Evan Wilson
  * Date: 10/10/2018
  * UPDATE THIS LATER
@@ -19,10 +19,7 @@ include('server.php');
         header('location: login.php');
     }
 
-    //forces home forum to refresh the table if accessed from the back link instead of a button
-    $_SESSION['refresh'] = $_GET['refresh'];
-    //calls server.php again now that $_SESSION['refresh'] is set 
-   @ include('server.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -61,36 +58,37 @@ include('server.php');
 </head>
 <body>
 <div class="header">
-    <h2>Forum</h2>
+    <h2>Reply to:  <?php echo $_SESSION['temptopic'];?></h2>
 </div>
 
-<form method="post" action="new_topic.php?<?php echo time(); ?>">
-<table id="forum"><col width="80%"><col width="20%"><tr><th>Topic (most recent on top)</th><th>Time of most recent post</th></tr>
-
-        <?php
-echo $_SESSION['mainforum'];
-    ?>
-
-    </table>
-        <!-- Javascript to forward to next page and set topic -->
-        <script language="javascript" type="text/javascript">
-            function rowClick(row) {
-                var x = row.cells;
-                x = x[0].innerHTML;
-                window.location.href = `topic_forum.php?topic=${x}`;
-            }
-        </script>
-
-        <br>
-        <div class="flex-container">
+<form method="post" action="reply_topic.php">
+    <?php include('errors.php'); ?>
+    <a>
         <div class="input-group">
-                <button type="submit" class="btn" name="new_topic1">New Topic</button>
-            </div>
+            <br>
+            <label><strong>What do you want to say?</strong></label>
+            <textarea name="message" maxlength="5000" rows="20" cols="160" 
+                style="
+                    padding: 5px 10px;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    border: 1px solid gray;" 
+                value="<?php echo $message; ?>"
+                required="true"></textarea>
+            <br>
+            <p style="font-size: 14px;">Max 5000 characters</p>
         </div>
+    </a>
+        <br>
+    <div class="flex-container">
+        <div class="input-group">
+            <button type="submit" class="btn" name="reply_topic">POST</button>
+        </div>
+    </div>
 </form>
 </body>
 <div class="footer">
-    <p style="text-align:left;"><a href="index.php" style="color: white;">HOME</a>
+    <p style="text-align:left;"><a href="topic_forum.php?topic='<?php echo $_SESSION['temptopic']?>'" style="color: white;">BACK</a>
         <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
     </p>
 </div>

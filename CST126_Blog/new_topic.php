@@ -56,42 +56,43 @@ include('server.php');
 </head>
 <body>
 <div class="header">
-    <h2>Forum</h2>
+    <h2>New Topic Post</h2>
 </div>
 
-<form method="post" action="home_forum.php?loggedin='1'">
-    future changes here to allow type up of new topic
-    <form method="post" action="login.php">
+<form method="post" action="new_topic.php">
     <?php include('errors.php'); ?>
     <a>
         <div class="input-group">
-            <label>Topic</label>
-            <input type="text" name="topic" required="true" >
+            <label><strong>Topic</strong></label>
+            <input type="text" name="topic" value="<?php echo $topic; ?>" required="true" >
         </div>
 </a>
     <a>
         <div class="input-group">
-            <label>What do you want to say?</label>
-            <textarea name="message" maxlength="3000" rows="20" cols="160" 
+            <br>
+            <label><strong>What do you want to say?</strong></label>
+            <textarea name="message" maxlength="5000" rows="20" cols="160" 
                 style="
                     padding: 5px 10px;
                     font-size: 16px;
                     border-radius: 5px;
-                    border: 1px solid gray;" required="true"></textarea>
+                    border: 1px solid gray;" 
+                value="<?php echo $message; ?>"
+                required="true"></textarea>
+            <br>
+            <p style="font-size: 14px;">Max 5000 characters</p>
         </div>
-</a>
-    <p>code here to insert into database</p>
+    </a>
         <br>
     <div class="flex-container">
-        
         <div class="input-group">
-            <button type="submit" class="btn" name="post_message">POST</button>
+            <button type="submit" class="btn" name="new_topic2">POST</button>
         </div>
     </div>
 </form>
 </body>
 <div class="footer">
-    <p style="text-align:left;"><a href="home_forum.php?loggedin='1'" style="color: white;">BACK</a>
+    <p style="text-align:left;"><a href="home_forum.php?refresh='1'" style="color: white;">BACK</a>
         <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
     </p>
 </div>

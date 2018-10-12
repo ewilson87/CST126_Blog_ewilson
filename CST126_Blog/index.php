@@ -50,7 +50,7 @@ if (isset($_GET['logout'])) {
 
     <!-- logged in user information -->
     <?php  if (isset($_SESSION['username'])) : ?>
-        <p class="center">Welcome <strong><?php echo strtoupper($_SESSION['username']); ?></strong> Please select one of the options below.</p>
+        <p class="center">Welcome <strong><?php echo strtoupper($_SESSION['fname']); ?></strong> <br>Please select one of the options below.</p>
         <form method="post" action="home_forum.php?loggedin='1'">
             <div class="input-group">
                 <button type="submit" class="btn" name="main_forum">FORUM</button>
