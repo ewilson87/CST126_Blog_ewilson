@@ -2,8 +2,8 @@
 /**
  * CST-126 Blog project
  * register.php version 1.0
- * Program Author: Evan Wilson
- * Date: 10/9/2018
+ * Program Author: Evan Wilson, Branden Manibusan, and Nicholas Thomas
+ * Date: 10/14/2018
  * Greeting/home page once logged in. Logic to prevent access without logging in, and to
  * greet the user by username
  * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
@@ -28,10 +28,10 @@ if (isset($_GET['logout'])) {
 <html>
 <head>
     <title>Home Page</title>
-    <link rel="stylesheet" type="text/css" href="style.css?<?php echo time(); ?>">
+    <!-- uses current system time in style.css call to ensure current updates without browser cache-->
+    <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
 </head>
 <body>
-
 <div class="header">
     <h2>Home Page</h2>
 </div>
@@ -51,21 +51,25 @@ if (isset($_GET['logout'])) {
     <!-- logged in user information -->
     <?php  if (isset($_SESSION['username'])) : ?>
         <p class="center">Welcome <strong><?php echo strtoupper($_SESSION['fname']); ?></strong> <br>Please select one of the options below.</p>
+        <!-- future options here for additional functions such as change account details and such.  -->
+        <!-- future - if username === admin then add administrative buttons to delete accounts and such -->
         <form method="post" action="home_forum.php?loggedin='1'">
             <div class="input-group">
                 <button type="submit" class="btn" name="main_forum">FORUM</button>
+
             </div>
         </form>
     <?php endif ?>
 </div>
 </body>
 <div class="footer">
-
     <p>
         <a href="index.php?logout='1'" style="color: white; float:right;">LOGOUT</a>
     </p>
     <br>
 </div>
+
+
 </html>
 
 

@@ -1,0 +1,12 @@
+{
+    "name": "ewwil/cst126_blog",
+    "authors": [
+        {
+            "name": "ewilson87",
+            "email": "evan.wilson.4@gmail.com"
+        }
+    ],
+    "require": { 
+        "php": ">=7.1" 
+    }
+}

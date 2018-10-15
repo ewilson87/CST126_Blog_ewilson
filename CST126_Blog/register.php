@@ -2,8 +2,8 @@
 /**
  * CST-126 Blog project
  * register.php version 1.0
- * Program Author: Evan Wilson
- * Date: 10/9/2018
+ * Program Author: Evan Wilson, Branden Manibusan, and Nicholas Thomas
+ * Date: 10/14/2018
  * HTML and PHP use in formatting and display of registration page and associated errors
  * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
  * Site was used in initial development of application with many changes implemented.
@@ -13,7 +13,8 @@ include('server.php') ?>
 <html>
 <head>
     <title>Register New User Account</title>
-    <link rel="stylesheet" type="text/css" href="style.css?<?php echo time(); ?>">
+    <!-- uses current system time in style.css call to ensure current updates without browser cache-->
+    <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
     <div class="header">
         <h2>Register New User Account</h2>
     </div>

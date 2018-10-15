@@ -2,8 +2,8 @@
 /**
  * CST-126 Blog project
  * server.php version 1.0
- * Program Author: Evan Wilson
- * Date: 10/9/2018
+ * Program Author: Evan Wilson, Branden Manibusan, and Nicholas Thomas
+ * Date: 10/14/2018
  * The main logic in connecting to the database for registration and login
  * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
  * Site was used in initial development of application with many changes implemented.
@@ -96,16 +96,16 @@ if (isset($_POST['login_user'])) {
         array_push($errors, "Password is required");
     }
 
-    //Currently displays username upon logging in. Might change to display first name in the future.
+    //Currently displays user's first name upon logging in
     //Queries SQL to verify a match for username and password
     if (count($errors) == 0) {
         $password = md5($password); //encrypts password to compare to database
         $query = "SELECT * FROM accounts WHERE username='$username' AND password='$password'";
         $results = mysqli_query($db, $query);
-        
+
         if (mysqli_num_rows($results) == 1) {
             $row=mysqli_fetch_array($results);
-            //sets session variables for user for possible use in the future
+            //sets session variables for user for use later in app areas
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
             $_SESSION['email'] = $row['email'];
@@ -118,40 +118,42 @@ if (isset($_POST['login_user'])) {
     }
 }
 
-// load forum
+// load forum when coming from index.php button click or topic_forum.php link with the refresh set.
 if (isset($_POST['main_forum']) or isset($_SESSION['refresh'])) {
-        $query = "SELECT title, post_time from forum f1 where post_time = (select MAX(post_time) from forum f2 where f1.title = f2.title) group by title order by post_time desc";
-        $results = mysqli_query($db, $query) or die("Bad Query: $query");
-        unset($_SESSION['refresh']);
-        $mainForum = '';
-
-            while ($row = mysqli_fetch_assoc($results)) {
-                $mainForum = $mainForum.'<tr onclick="javascript:rowClick(this)">'."<td>{$row['title']}</td><td>{$row['post_time']}</td></tr>"; 
-            }
-
-        $_SESSION['mainforum'] = $mainForum;
+    //query groups the forum table by title and orders it by the most recent posts at top
+    $query = "SELECT title, post_time from forum f1 where post_time = (select MAX(post_time) from forum f2 where f1.title = f2.title) group by title order by post_time desc";
+    $results = mysqli_query($db, $query) or die("Bad Query: $query");
+    unset($_SESSION['refresh']);
+    $mainForum = '';
+    // goes through the query row by row and concatanates with itself to make the table
+    while ($row = mysqli_fetch_assoc($results)) {
+        $mainForum = $mainForum.'<tr onclick="javascript:rowClick(this)">'."<td>{$row['title']}</td><td>{$row['post_time']}</td></tr>";
     }
+
+    $_SESSION['mainforum'] = $mainForum;
+}
 
 // load topic forum
 if (isset($_SESSION['topic'])) {
-        $title = $_SESSION['topic'];
-        $_SESSION['temptopic'] = $title;
-        unset($_SESSION['topic']);
-        $query = "SELECT * from forum where title = '$title' order by post_time desc";
-        $results = mysqli_query($db, $query) or die("Bad Query: $query");
+    $title = $_SESSION['topic'];
+    //copies topic to temptopic for use later in the app without impacting this are by letting the topic variable be unset, otherwise it will be called when we don't want it to.
+    $_SESSION['temptopic'] = $title;
+    unset($_SESSION['topic']);
+    $query = "SELECT * from forum where title = '$title' order by post_time desc";
+    $results = mysqli_query($db, $query) or die("Bad Query: $query");
 
-        $topicforum = '';
-
-            while ($row = mysqli_fetch_assoc($results)) {
-                $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+    $topicforum = '';
+    // goes through the query row by row and concatanates with itself to make the table
+    while ($row = mysqli_fetch_assoc($results)) {
+        $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
                                            <td>{$row['message']}</td>
-                                           <td style='text-align:center'>{$row['post_time']}</td></tr>"; 
-            }
-
-        $_SESSION['topicforum'] = $topicforum;
+                                           <td style='text-align:center'>{$row['post_time']}</td></tr>";
     }
 
-    // New topic post
+    $_SESSION['topicforum'] = $topicforum;
+}
+
+// New topic post
 if (isset($_POST['new_topic2'])) {
     // receive all input values from the form
     $topic = mysqli_real_escape_string($db, $_POST['topic']);
@@ -172,23 +174,23 @@ if (isset($_POST['new_topic2'])) {
 
 }
 
-    // Post reply to existing topic
-    if (isset($_POST['reply_topic'])) {
-        // receive all input values from the form
-        $topic = $_SESSION['temptopic'];
-        $message = mysqli_real_escape_string($db, $_POST['message']);
-        $username = $_SESSION['username'];
-        //ensure errors array is empty before possible errors pushed
-        $errors = array();
-        // form validation: ensure that the form is correctly filled out
-        // by adding (array_push()) corresponding error into $errors array
-        if (empty($message)) { array_push($errors, "Message is required"); }
-    
-        if (count($errors) == 0) {
-            $query = "INSERT INTO forum (username, title, message, post_time) values ('$username', '$topic', '$message', CURRENT_TIMESTAMP)";
-            $results = mysqli_query($db, $query);
-            header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
-        }
-    
+// Post reply to existing topic
+if (isset($_POST['reply_topic'])) {
+    // receive all input values from the form
+    $topic = $_SESSION['temptopic'];
+    $message = mysqli_real_escape_string($db, $_POST['message']);
+    $username = $_SESSION['username'];
+    //ensure errors array is empty before possible errors pushed
+    $errors = array();
+    // form validation: ensure that the form is correctly filled out
+    // by adding (array_push()) corresponding error into $errors array
+    if (empty($message)) { array_push($errors, "Message is required"); }
+
+    if (count($errors) == 0) {
+        $query = "INSERT INTO forum (username, title, message, post_time) values ('$username', '$topic', '$message', CURRENT_TIMESTAMP)";
+        $results = mysqli_query($db, $query);
+        header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
     }
+
+}
 ?>
