@@ -91,7 +91,7 @@ if (!isset($_SESSION['username'])) {
     <?php include('errors.php'); ?>
     <a>
         <div class="input-group">
-            <input placeholder="Enter Topic Title" type="text" name="topic" value="<?php echo $topic; ?>" required="true" >
+            <input placeholder="Enter Topic Title" type="text" name="topic" value="<?php echo $topic; ?>" required="true">
         </div>
     </a>
     <a>
