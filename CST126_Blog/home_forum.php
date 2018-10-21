@@ -20,7 +20,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 //forces home forum to refresh the table if accessed from the back link instead of a button
-//$_SESSION['refresh'] = $_GET['refresh'];
+@ $_SESSION['refresh'] = $_GET['refresh'];
 //calls server.php again now that $_SESSION['refresh'] is set 
 @ include('server.php');
 ?>

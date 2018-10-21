@@ -105,49 +105,9 @@ include('server.php');
 </form>
 </body>
 <div class="footer">
-    <p style="text-align:left;"><a href="topic_forum.php?topic='<?php echo $_SESSION['temptopic']?>'" style="color: white;">BACK</a>
+    <p style="text-align:left;"><a href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>" style="color: white;">BACK</a>
 
         <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
     </p>
 </div>
-</html>
-    <title>CST 126 Blog</title>
-    <!-- uses current system time in style.css call to ensure current updates without browser cache-->
-    <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
-    <style>
-    #forum {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
-</style>
-    <!-- Language Filter -->
-    <script type="text/javascript">
-        function check_val()
-        {
-            var bad_words=new Array("death","kill","murder");
-            var check_text=document.getElementById("text").value;
-
-            var error=0;
-            for(var i=0;i<bad_words.length;i++)
-            {
-                var val=bad_words[i];
-                if((check_text.toLowerCase()).indexOf(val.toString())>-1)
-                {
-                    error=error+1;
-                }
-            }
-
-            if(error>0)
-            {
-                document.getElementById("bad_notice").innerHTML="WARNING: Some Bad Words In Your Text";
-            }
-            else
-            {
-                document.getElementById("bad_notice").innerHTML="";
-            }
-        }
-    </script>
-</head>
-<body>
 </html>

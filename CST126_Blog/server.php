@@ -20,6 +20,7 @@ $datejoined = "";
 $topic = "";
 $message = "";
 $errors = array();
+$postID = "";
 
 //database login details obtained from GCU Hosting Solution (Heroku)
 $host = 'us-cdbr-iron-east-01.cleardb.net';
@@ -143,11 +144,24 @@ if (isset($_SESSION['topic'])) {
     $results = mysqli_query($db, $query) or die("Bad Query: $query");
 
     $topicforum = '';
+
+    //sets table up for admin mode
+    if ($_SESSION['username'] === "admin"){
+        while ($row = mysqli_fetch_assoc($results)) {
+            $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+                                               <td>{$row['message']}</td>
+                                               <td style='text-align:center'>{$row['post_time']}</td>
+                                               <td style='text-align:center'>{$row['postID']}</td></tr>";
+            }
+
+    }
     // goes through the query row by row and concatanates with itself to make the table
-    while ($row = mysqli_fetch_assoc($results)) {
+    else {
+        while ($row = mysqli_fetch_assoc($results)) {
         $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
                                            <td>{$row['message']}</td>
                                            <td style='text-align:center'>{$row['post_time']}</td></tr>";
+        }
     }
 
     $_SESSION['topicforum'] = $topicforum;
@@ -169,7 +183,7 @@ if (isset($_POST['new_topic2'])) {
     if (count($errors) == 0) {
         $query = "INSERT INTO forum (username, title, message, post_time) values ('$username', '$topic', '$message', CURRENT_TIMESTAMP)";
         $results = mysqli_query($db, $query);
-        header("location: home_forum.php?newpost='1'");
+        header("location: home_forum.php?refresh='1'");
     }
 
 }
@@ -192,5 +206,24 @@ if (isset($_POST['reply_topic'])) {
         header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
     }
 
+}
+
+if (isset($_POST['reply_topic1'])) {
+        header('location: reply_topic.php?topic='.$_SESSION['temptopic']);
+}
+
+if (isset($_POST['deletePost'])) {
+    $postID = mysqli_real_escape_string($db, $_POST['postID']);
+    $query = "DELETE FROM forum WHERE postID = $postID";
+
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['deleteSuccess'] = true;
+        header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
+    }
+    else {
+        $_SESSION['deleteSuccess'] = false;
+        $_SESSION['queryPostID'] = $postID;
+        header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
+    }
 }
 ?>
