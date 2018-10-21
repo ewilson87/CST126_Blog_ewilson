@@ -20,12 +20,12 @@ if (!isset($_SESSION['username'])) {
 }
 
 //forces home forum to refresh the table if accessed from the back link instead of a button
-@ $_SESSION['refreshAccounts'] = $_GET['refreshAccounts'];
+//@ $_SESSION['refreshAccounts'] = $_GET['refreshAccounts'];
 
-if (isset($_GET['refreshAccounts'])){
+//if (isset($_GET['refreshAccounts'])){
 //calls server.php again now that $_SESSION['refreshAccounts'] is set 
-@ include('server.php');
-}
+//@ include('server.php');
+//}
 ?>
 
 <!DOCTYPE html>
@@ -107,6 +107,9 @@ if (isset($_GET['refreshAccounts'])){
 
     <br>
     <br>
+    <div class="input-group">
+                <button type="submit" class="btn" name="admin_accounts">REFRESH</button>
+            </div>
     </form>
     <form method="post" action="admin_accounts.php">
     <div class="flex-container">

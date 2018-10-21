@@ -235,11 +235,10 @@ if (isset($_POST['deletePost'])) {
     }
 }
 
-if (isset($_POST['admin_accounts']) or isset($_SESSION['refreshAccounts'])) {
+if (isset($_POST['admin_accounts'])) {
     $accountsList = "";
     $query = "SELECT * from accounts where username != 'admin'";
     $results = mysqli_query($db, $query);
-    unset($_SESSION['refreshAccounts']);
   
     while ($row = mysqli_fetch_assoc($results)) {
         $accountsList = $accountsList."<tr><td>{$row['username']}</td>
