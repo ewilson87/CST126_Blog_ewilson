@@ -111,8 +111,16 @@ if (isset($_POST['login_user'])) {
             $_SESSION['lname'] = $row['lname'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['username'] = $username;
+            $_SESSION['suspended'] = $row['suspended'];
+            if ($_SESSION['suspended'] == 1){
+                array_push($errors, "Your account is currently suspended by the administrator");
+                session_destroy();
+                unset($_SESSION['username']);
+            }
+            else {
             $_SESSION['success'] = "You are now logged in";
             header('location: index.php');
+            }
         }else {
             array_push($errors, "Wrong username/password combination");
         }
