@@ -226,4 +226,71 @@ if (isset($_POST['deletePost'])) {
         header('location: topic_forum.php?topic='.$_SESSION['temptopic']);
     }
 }
+
+if (isset($_POST['admin_accounts']) or isset($_SESSION['refreshAccounts'])) {
+    $accountsList = "";
+    $query = "SELECT * from accounts where username != 'admin'";
+    $results = mysqli_query($db, $query);
+    unset($_SESSION['refreshAccounts']);
+  
+    while ($row = mysqli_fetch_assoc($results)) {
+        $accountsList = $accountsList."<tr><td>{$row['username']}</td>
+                                           <td>{$row['fname']}</td>
+                                           <td>{$row['lname']}</td>
+                                           <td>{$row['email']}</td>
+                                           <td>{$row['datejoined']}</td>
+                                           <td>";
+                                           
+                                        if($row['suspended'] == 0){
+                                            $accountsList = $accountsList."</td></tr>";
+                                        }
+                                        else {
+                                            $accountsList = $accountsList."YES</td></tr>";
+                                        }
+        }
+        $_SESSION['accountsList'] = $accountsList;
+        unset($_POST['admin_accounts']);
+}
+
+if (isset($_POST['suspendAccount'])) {
+    $_SESSION['suspendSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET suspended = true where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['suspendSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+        header('location: admin_accounts.php');
+    }
+    else {
+        header('location: admin_accounts.php');
+    }
+}
+
+if (isset($_POST['enableAccount'])) {
+    $_SESSION['enableSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET suspended = false where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['enableSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+        header('location: admin_accounts.php');
+    }
+    else {
+        header('location: admin_accounts.php');
+    }
+}
+
+if (isset($_POST['deleteAccount'])) {
+    $_SESSION['deleteAccount'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "DELETE FROM accounts where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['deleteAccount'] = true;
+        $_SESSION['refreshAccounts'] = true;
+        header('location: admin_accounts.php');
+    }
+    else {
+        header('location: admin_accounts.php');
+    }
+}
 ?>

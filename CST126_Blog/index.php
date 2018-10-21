@@ -54,10 +54,23 @@ if (isset($_GET['logout'])) {
         <!-- future options here for additional functions such as change account details and such.  -->
         <!-- future - if username === admin then add administrative buttons to delete accounts and such -->
         <form method="post" action="home_forum.php?loggedin='1'">
+        <div class="flex-container">
             <div class="input-group">
                 <button type="submit" class="btn" name="main_forum">FORUM</button>
-
             </div>
+            </div>
+            </form>
+            <form method="post" action="admin_accounts.php">
+            <?php 
+            if ($_SESSION['username'] === "admin"):
+            ?>
+            <div class="flex-container">
+            <div class="input-group">
+                <button type="submit" class="btn" name="admin_accounts">ACCOUNTS</button>
+            </div>
+            <?php endif ?>
+        </div>
+        
         </form>
     <?php endif ?>
 </div>
