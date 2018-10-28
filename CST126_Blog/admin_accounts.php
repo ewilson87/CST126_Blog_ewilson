@@ -44,34 +44,51 @@ if (!isset($_SESSION['username'])) {
         #forum td, #forum th {
             border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 8px;
-            color: #ffffff;
+            color: #212121;
         }
 
         #forum tr:nth-child(even) {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #BBFFF1;}
+            border: 1px solid dodgerblue;
+            color: #212121;}
         }
 
         #forum th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
-            border: 1px solid #BBFFF1;
-            background-color: #000000;
-            color: #FFFFFF;
+            border: 2px solid;
+            border-color: dodgerblue;
+            background-color: rgba(0, 0, 0, 0.0);
+            color: #212121;
+            font-size: 18px;
+            font-weight: bold;
         }
-        td:hover {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #BBFFF1;
+        tr:hover {
+            border: 1px #dddddd;
+            background-color: #dddddd;
+            color: dodgerblue;
         }    }
 
     </style>
+
+    <!-- This stops the enter key from being active and forces user to click which button to submit -->
+    <script type="text/javascript"> 
+        function stopRKey(evt) { 
+        var evt = (evt) ? evt : ((event) ? event : null); 
+        var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+        if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+        } 
+        document.onkeypress = stopRKey; 
+    </script>
 </head>
 <body>
+<!-- Implement new header -->
 <div class="header">
-    <h2>ADMINISTRATION OF USER ACCOUNTS</h2>
+    <a href="#default" class="logo">ADMINISTRATION OF USER ACCOUNTS</a>
+    <div class="header-right">
+        <a class="active" href="index.php">Home</a>
+        <a href="index.php?logout='1'">Logout</a>
+    </div>
 </div>
 <?php 
         if (isset($_SESSION['suspendSuccess'])){
@@ -92,12 +109,13 @@ if (!isset($_SESSION['username'])) {
 
 <form method="post" action="admin_accounts.php">
     <table id="forum">
-        <tr><th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">USERNAME</th>
-            <th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">FIRST NAME</th>
-            <th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">LAST NAME</th>
-            <th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">E-MAIL</th>
-            <th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">MEMBER SINCE</th>
-            <th style="border: 1px solid #BBFFF1; background-color: #000000; color: #FFFFFF;">SUSPENDED</th></tr>
+        <tr><th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">USERNAME</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">FIRST NAME</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">LAST NAME</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">E-MAIL</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">MEMBER SINCE</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">SUSPENDED</th>
+            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">ACCESS LVL</th></tr>
 
         <?php
         echo $_SESSION['accountsList'];
@@ -107,17 +125,22 @@ if (!isset($_SESSION['username'])) {
 
     <br>
     <br>
-    <div class="input-group">
-                <button type="submit" class="btn" name="admin_accounts">REFRESH</button>
-            </div>
     </form>
     <form method="post" action="admin_accounts.php">
     <div class="flex-container">
     <div class="input-group">
         
                 <input type="text" name="accountUsername" placeholder="USERNAME">
-        <button type="submit" class="btn" name="suspendAccount">SUSPEND</button>
+                <br>
+                <br>
+        <button type="submit" class="btn" name="suspendAccount">SUSPEND</button>            
         <button type="submit" class="btn" name="enableAccount">ENABLE</button>
+        <br>
+        <br>
+        <button type="submit" class="btn" name="moderatorAccount">MAKE MODERATOR</button>
+        <button type="submit" class="btn" name="userAccount">MAKE USER</button>
+        <br>
+        <br>
         <button type="submit" class="btn" name="deleteAccount">DELETE</button>
         <label>WARNING: DELETE CANNOT BE UNDONE</label>
     </div>
@@ -125,9 +148,4 @@ if (!isset($_SESSION['username'])) {
     </div>
 </form>
 </body>
-<div class="footer">
-    <p style="text-align:left;"><a href="index.php" style="color: white;">HOME</a>
-        <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
-    </p>
-</div>
 </html>

@@ -37,56 +37,46 @@ include('server.php');
     </style>
     <!-- Language Filter -->
     <script type="text/javascript">
-        function check_val()
-        {
-            var bad_words=new Array("death","kill","murder");
-            var check_text=document.getElementById("text").value;
-
-            var error=0;
-            for(var i=0;i<bad_words.length;i++)
-            {
-                var val=bad_words[i];
-                if((check_text.toLowerCase()).indexOf(val.toString())>-1)
-                {
-                    error=error+1;
-                }
-            }
-
-            if(error>0)
-            {
-                document.getElementById("bad_notice").innerHTML="WARNING: Some Bad Words In Your Text";
-                $badWordBool = true;     
-            }
-            else
-            {
-                document.getElementById("bad_notice").innerHTML="";
-                $badWordBool = false;
+        function language_filter(el){
+            var text_area = document.getElementById(el);
+            var regex = /death|murder|kill|dead/gi;
+            if(text_area.value.search(regex) > -1) {
+                text_area.value = text_area.value.replace(regex, "");
             }
         }
     </script>
 </head>
 <body>
 <div class="header">
-    <h2>Reply to:  <?php echo $_SESSION['temptopic'];?></h2>
+    <a href="#default" class="logo">Reply to:  <?php echo $_SESSION['temptopic'];?></a>
+    <div class="header-right">
+        <a class="active" href="index.php">Home</a>
+        <a href="home_forum.php?refresh='1'">Forum</a>
+        <a href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>">Back</a>
+        <a href="index.php?logout='1'">Logout</a>
+    </div>
 </div>
+
 
 <form method="post" action="reply_topic.php">
     <?php include('errors.php'); ?>
     <a>
         <div class="input-group">
             <br>
+            <!-- Implement language filter in body of reply -->
             <textarea
-                placeholder="What do you want to say? Write Some Text Having Words 'death', 'kill', 'murder'"
-                id="text" onKeyUp="check_val()"
+                class="text" id="text"
+                onkeyup="language_filter('text')"
+                placeholder="What do you want to say? Write Some Text Having Words 'death', 'kill', 'murder', 'dead'"
                 name="message" maxlength="5000" rows="20" cols="160"
                 style="
-                border-radius: 5px;
-                border: 1px rgba(0, 0, 0, 0.85);
-                background-color: rgba(0, 0, 0, 0.5);
-                color: #BBFFF1;
                 padding: 5px 10px;
-                font-size: 16px;
-                border-radius: 5px;"
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 5px;
+                border: 1px #dddddd;
+                background-color: #dddddd;
+                color: dodgerblue;
                 value="<?php echo $message; ?>"
                 required="true"></textarea>
             <p id="bad_notice"></p>
@@ -104,10 +94,12 @@ include('server.php');
 
 </form>
 </body>
+<!-- TODO: Remove when everyone test
 <div class="footer">
     <p style="text-align:left;"><a href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>" style="color: white;">BACK</a>
 
         <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
     </p>
 </div>
+-->
 </html>

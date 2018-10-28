@@ -36,34 +36,44 @@ if (!isset($_SESSION['username'])) {
         #forum {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
+            text-align: center;
+
             width: 100%;
         }
 
         #forum td, #forum th {
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             padding: 8px;
-            color: #ffffff;
-        }
-
-        #forum tr:nth-child(even) {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #BBFFF1;
+            text-align: center;
+            color: dodgerblue;
         }
 
         #forum th {
             padding-top: 12px;
             padding-bottom: 12px;
-            text-align: left;
-            border: 1px solid #BBFFF1;
-            background-color: #000000;
-            color: #FFFFFF;
+            text-align: center;
+            background: #dddddd;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 20px 10px;
         }
+        tr:hover {
+            border: 1px #dddddd;
+            background-color: #dddddd;
+            color: dodgerblue;
+        }    }
+
     </style>
 </head>
 <body>
 <div class="header">
-    <h2><?php echo $_SESSION['temptopic'] ?> Forum</h2>
+    <!-- Implement new header -->
+    <div class="header-right">
+        <a class="active" href="home_forum.php?refresh='1'">Forum</a>
+        <a href="index.php?logout='1'">Logout</a>
+    </div>
+
+    <h2>Forum Topic: <?php echo $_SESSION['temptopic'] ?></h2>
     <?php 
         if (isset($_SESSION['deleteSuccess'])){
             echo "<br>";
@@ -89,13 +99,18 @@ if (!isset($_SESSION['username'])) {
 
 
     <?php 
-    //sets table up for admin mode
-        if ($_SESSION['username'] === "admin"):
+    //sets table up for admin/moderator mode
+        if ($_SESSION['access_lvl'] > 0):
     ?>
     <!-- Sets table, then echos query results from server.php for all the rows data contained in $_SESSION['topicforum']-->
     <table id="forum"><col width="15%"><col width="60%"><col width="15%"><col width="10%"><tr><th>Username</th><th>Message</th><th>Timestamp</th><th>Post ID</th></tr>
         <?php
-        echo $_SESSION['topicforum']." IN ADMIN MODE";
+        if ($_SESSION['access_lvl'] == 2){
+            echo $_SESSION['topicforum']." AS ADMIN";
+        }
+        else {
+            echo $_SESSION['topicforum']." AS MODERATOR";
+        }
         ?>
     </table>
 
@@ -119,6 +134,7 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>    
 </form>
+<?php if ($_SESSION['access_lvl'] > 0): ?>
     <form method="post" action="home_forum.php">
         <div class="flex-container">
             <div class="input-group">
@@ -129,10 +145,6 @@ if (!isset($_SESSION['username'])) {
         </div>
         <br>
     </form>
+<?php endif ?>
 </body>
-<div class="footer">
-    <p style="text-align:left;"><a href="home_forum.php?refresh='1'" style="color: white;">BACK</a>
-        <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
-    </p>
-</div>
 </html>

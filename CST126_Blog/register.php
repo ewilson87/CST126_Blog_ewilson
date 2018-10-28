@@ -16,8 +16,21 @@ include('server.php') ?>
     <!-- uses current system time in style.css call to ensure current updates without browser cache-->
     <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
     <div class="header">
-        <h2>Register New User Account</h2>
+        <a href="#default" class="logo">Register New User Account</a>
+        <div class="header-right">
+            <a class="active" href="login.php">Sign In</a>
+        </div>
     </div>
+    <!-- Language Filter -->
+    <script type="text/javascript">
+        function language_filter(el){
+            var text_area = document.getElementById(el);
+            var regex = /death|murder|kill|dead/gi;
+            if(text_area.value.search(regex) > -1) {
+                text_area.value = text_area.value.replace(regex, "");
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -37,7 +50,11 @@ include('server.php') ?>
     <div class="flex-container">
         <div class="input-group">
             <label>Username</label>
-            <input type="text" name="username" value="<?php echo $username; ?>" required="true">
+            <!-- Implement language filter in username -->
+            <input
+                    class="ta" id="ta" name="ta"
+                    onkeyup="language_filter('ta')" onkeydown="language_filter('ta')"
+                    type="text" name="username" value="<?php echo $username; ?>" required="true">
         </div>
         <div class="input-group">
             <label>E-mail</label>
@@ -61,10 +78,12 @@ include('server.php') ?>
     </div>
 
 </form>
+<!-- TODO: Remove when everyone test
 <div class="footer">
     <p>
         Already registered? <a href="login.php" style="color: white;">Sign in</a>
     </p>
 </div>
+-->
 </body>
 </html>

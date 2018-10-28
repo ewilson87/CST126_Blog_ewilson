@@ -19,6 +19,7 @@ $email    = "";
 $datejoined = "";
 $topic = "";
 $message = "";
+$access_lvl = "";
 $errors = array();
 $postID = "";
 
@@ -72,14 +73,15 @@ if (isset($_POST['reg_user'])) {
     // Register user if there are no errors, table also creates a default current date for when all users are registered to track when they joined
     if (count($errors) == 0) {
         $password = md5($password_1); //encrypts password before saving to database
-        $query = "INSERT INTO accounts (username, password, fname, lname, email, datejoined) 
-  			  VALUES('$username', '$password', '$fname', '$lname', '$email', CURRENT_DATE)";
+        $query = "INSERT INTO accounts (username, password, fname, lname, email, datejoined, access_lvl) 
+  			  VALUES('$username', '$password', '$fname', '$lname', '$email', CURRENT_DATE, 0)";
         mysqli_query($db, $query);
         //sets session variables for user for possible use in the future
         $_SESSION['username'] = $username;
         $_SESSION['fname'] = $fname;
         $_SESSION['lname'] = $lname;
         $_SESSION['email'] = $email;
+        $_SESSION['access_lvl'] = $access_lvl;
         $_SESSION['success'] = "You are now logged in";
         header('location: index.php');
     }
@@ -112,6 +114,7 @@ if (isset($_POST['login_user'])) {
             $_SESSION['email'] = $row['email'];
             $_SESSION['username'] = $username;
             $_SESSION['suspended'] = $row['suspended'];
+            $_SESSION['access_lvl'] = $row['access_lvl'];
             if ($_SESSION['suspended'] == 1){
                 array_push($errors, "Your account is currently suspended by the administrator");
                 session_destroy();
@@ -153,22 +156,65 @@ if (isset($_SESSION['topic'])) {
 
     $topicforum = '';
 
-    //sets table up for admin mode
-    if ($_SESSION['username'] === "admin"){
+    //sets table up for admin/moderator mode
+    if ($_SESSION['access_lvl'] > 0){
         while ($row = mysqli_fetch_assoc($results)) {
-            $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
-                                               <td>{$row['message']}</td>
-                                               <td style='text-align:center'>{$row['post_time']}</td>
-                                               <td style='text-align:center'>{$row['postID']}</td></tr>";
+
+            $tempquery = "SELECT access_lvl from accounts where username = '{$row['username']}'";
+            $tempresults = mysqli_query($db, $tempquery);
+            $temprow = mysqli_fetch_assoc($tempresults);
+            $access_lvl = $temprow['access_lvl'];
+            //attempt at altering text color here based on access level...
+            //Branden feel free to alter colors, or do text color instead of bgcolor, I was just having some troubles with it
+            
+            if ($access_lvl == 2){
+                $topicforum = $topicforum."<tr  bgcolor='lightcoral'><td style='text-align:center'>{$row['username']}</td>
+                                                                <td>{$row['message']}</td>
+                                                                <td style='text-align:center'>{$row['post_time']}</td>
+                                                                <td style='text-align:center'>{$row['postID']}</td></tr>";
             }
+            else if ($access_lvl == 1){
+                $topicforum = $topicforum."<tr bgcolor='lightblue'><td style='text-align:center'>{$row['username']} *MODERATOR*</td>
+                                                                    <td>{$row['message']}</td>
+                                                                    <td style='text-align:center'>{$row['post_time']}</td>
+                                                                    <td style='text-align:center'>{$row['postID']}</td></tr>";
+            }
+            else {
+                $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+                                                                    <td>{$row['message']}</td>
+                                                                    <td style='text-align:center'>{$row['post_time']}</td>
+                                                                    <td style='text-align:center'>{$row['postID']}</td></tr>";
+            }
+        }
 
     }
     // goes through the query row by row and concatanates with itself to make the table
     else {
         while ($row = mysqli_fetch_assoc($results)) {
-        $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+
+            $tempquery = "SELECT access_lvl from accounts where username = '{$row['username']}'";
+            $tempresults = mysqli_query($db, $tempquery);
+            $temprow = mysqli_fetch_assoc($tempresults);
+            $access_lvl = $temprow['access_lvl'];
+            //attempt at altering text color here based on access level...
+            //Branden feel free to alter colors, or do text color instead of bgcolor, I was just having some troubles with it
+
+            if ($access_lvl == 2){
+                $topicforum = $topicforum."<tr bgcolor='lightcoral'><td style='text-align:center'>{$row['username']}</td>
                                            <td>{$row['message']}</td>
-                                           <td style='text-align:center'>{$row['post_time']}</td></tr>";
+                                           <td style='text-align:center'>{$row['post_time']}</td></tr>"; 
+            }
+            else if ($access_lvl == 1){
+                $topicforum = $topicforum."<tr bgcolor='lightblue'><td style='text-align:center'>{$row['username']} *MODERATOR*</td>
+                                           <td>{$row['message']}</td>
+                                           <td style='text-align:center'>{$row['post_time']}</td></tr>"; 
+            }
+            else {
+                $topicforum = $topicforum."<tr><td style='text-align:center'>{$row['username']}</td>
+                                           <td>{$row['message']}</td>
+                                           <td style='text-align:center'>{$row['post_time']}</td></tr>"; 
+            }
+                  
         }
     }
 
@@ -235,9 +281,59 @@ if (isset($_POST['deletePost'])) {
     }
 }
 
-if (isset($_POST['admin_accounts'])) {
+if (isset($_POST['suspendAccount'])) {
+    $_SESSION['suspendSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET suspended = true where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['suspendSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+    }
+}
+
+if (isset($_POST['enableAccount'])) {
+    $_SESSION['enableSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET suspended = false where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['enableSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+    }
+}
+
+if (isset($_POST['moderatorAccount'])) {
+    $_SESSION['moderatorSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET access_lvl = 1 where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['moderatorSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+    }
+}
+
+if (isset($_POST['userAccount'])) {
+    $_SESSION['userSuccess'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "UPDATE accounts SET access_lvl = 0 where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['userSuccess'] = true;
+        $_SESSION['refreshAccounts'] = true;
+    }
+}
+
+if (isset($_POST['deleteAccount'])) {
+    $_SESSION['deleteAccount'] = false;
+    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
+    $query = "DELETE FROM accounts where username ="."'$accountUsername'";
+    if ($results = mysqli_query($db, $query)){
+        $_SESSION['deleteAccount'] = true;
+        $_SESSION['refreshAccounts'] = true;
+    }
+}
+
+if (isset($_POST['admin_accounts']) or isset($_SESSION['refreshAccounts'])) {
     $accountsList = "";
-    $query = "SELECT * from accounts where username != 'admin'";
+    $query = "SELECT * from accounts where access_lvl != 2 order by access_lvl, username"; //select all besides administrator
     $results = mysqli_query($db, $query);
   
     while ($row = mysqli_fetch_assoc($results)) {
@@ -249,55 +345,21 @@ if (isset($_POST['admin_accounts'])) {
                                            <td>";
                                            
                                         if($row['suspended'] == 0){
-                                            $accountsList = $accountsList."</td></tr>";
+                                            $accountsList = $accountsList."</td>";
                                         }
                                         else {
-                                            $accountsList = $accountsList."YES</td></tr>";
+                                            $accountsList = $accountsList."YES</td>";
+                                        }
+                                        if($row['access_lvl'] == 0){
+                                            $accountsList = $accountsList."<td>USER</td></tr>"; 
+                                        }
+                                        else if ($row['access_lvl'] == 1){
+                                            $accountsList = $accountsList."<td>MODERATOR</td></tr>";
                                         }
         }
         $_SESSION['accountsList'] = $accountsList;
         unset($_POST['admin_accounts']);
+        unset($_SESSION['refreshAccounts']);
 }
 
-if (isset($_POST['suspendAccount'])) {
-    $_SESSION['suspendSuccess'] = false;
-    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
-    $query = "UPDATE accounts SET suspended = true where username ="."'$accountUsername'";
-    if ($results = mysqli_query($db, $query)){
-        $_SESSION['suspendSuccess'] = true;
-        $_SESSION['refreshAccounts'] = true;
-        header('location: admin_accounts.php');
-    }
-    else {
-        header('location: admin_accounts.php');
-    }
-}
-
-if (isset($_POST['enableAccount'])) {
-    $_SESSION['enableSuccess'] = false;
-    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
-    $query = "UPDATE accounts SET suspended = false where username ="."'$accountUsername'";
-    if ($results = mysqli_query($db, $query)){
-        $_SESSION['enableSuccess'] = true;
-        $_SESSION['refreshAccounts'] = true;
-        header('location: admin_accounts.php');
-    }
-    else {
-        header('location: admin_accounts.php');
-    }
-}
-
-if (isset($_POST['deleteAccount'])) {
-    $_SESSION['deleteAccount'] = false;
-    $accountUsername = mysqli_real_escape_string($db, $_POST['accountUsername']);
-    $query = "DELETE FROM accounts where username ="."'$accountUsername'";
-    if ($results = mysqli_query($db, $query)){
-        $_SESSION['deleteAccount'] = true;
-        $_SESSION['refreshAccounts'] = true;
-        header('location: admin_accounts.php');
-    }
-    else {
-        header('location: admin_accounts.php');
-    }
-}
 ?>

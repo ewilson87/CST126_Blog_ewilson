@@ -32,8 +32,18 @@ if (isset($_GET['logout'])) {
     <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
 </head>
 <body>
+<!-- Backup header
 <div class="header">
     <h2>Home Page</h2>
+</div>
+-->
+<!-- Implement new header -->
+<div class="header">
+    <a href="#default" class="logo">CST126 Blog</a>
+    <div class="header-right">
+        <a class="active" href="home_forum.php?refresh='1'">Forum</a>
+        <a href="index.php?logout='1'">Logout</a>
+    </div>
 </div>
 <div class="content">
     <!-- notification message -->
@@ -50,16 +60,25 @@ if (isset($_GET['logout'])) {
 
     <!-- logged in user information -->
     <?php  if (isset($_SESSION['username'])) : ?>
-        <p class="center">Welcome <strong><?php echo strtoupper($_SESSION['fname']); ?></strong> <br>Please select one of the options below.</p>
+        <p class="center"
+           style="
+                color: dodgerblue;
+                padding: 5px 10px;
+                font-size: 32px;
+                font-weight: bold;
+                border-radius: 5px;"
+           s>Welcome <strong><?php echo strtoupper($_SESSION['fname']); ?></strong><br>Please select Forum or Logout on the top right. </p>
         <!-- future options here for additional functions such as change account details and such.  -->
         <!-- future - if username === admin then add administrative buttons to delete accounts and such -->
-        <form method="post" action="home_forum.php?loggedin='1'">
+        <!-- TODO: Remove <form method="post" action="home_forum.php?loggedin='1'">-->
+        <!-- TODO: Remove when we test
         <div class="flex-container">
             <div class="input-group">
                 <button type="submit" class="btn" name="main_forum">FORUM</button>
             </div>
             </div>
             </form>
+            -->
             <form method="post" action="admin_accounts.php">
             <?php 
             if ($_SESSION['username'] === "admin"):
@@ -75,13 +94,15 @@ if (isset($_GET['logout'])) {
     <?php endif ?>
 </div>
 </body>
+
+<!-- TODO: Delete when everyone test
 <div class="footer">
     <p>
         <a href="index.php?logout='1'" style="color: white; float:right;">LOGOUT</a>
     </p>
     <br>
 </div>
-
+-->
 
 </html>
 

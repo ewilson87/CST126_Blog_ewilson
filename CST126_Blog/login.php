@@ -18,7 +18,10 @@ include('server.php') ?>
 </head>
 <body>
 <div class="header">
-    <h2>Login to CST-126 Blog</h2>
+    <a href="#default" class="logo">Login to CST-126 Blog</a>
+    <div class="header-right">
+        <a class="active" href="register.php">Sign Up</a>
+    </div>
 </div>
 
 <form method="post" action="login.php">
@@ -41,12 +44,13 @@ include('server.php') ?>
         </div>
     </div>
 </form>
+<!-- TODO: Remove when everyone test
 <div class="footer">
-
     <p>
         New to the blog? <a href="register.php" style="color: white;">Sign up</a>
     </p>
 
 </div>
+-->
 </body>
 </html>
