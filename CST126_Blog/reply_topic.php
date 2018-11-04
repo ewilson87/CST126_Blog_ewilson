@@ -8,7 +8,7 @@
  * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
  * Site was used in initial development of application with many changes implemented.
  */
-
+include('alert.php'); // Include custom alert script
 include('server.php');
 
     //only allows access to this page if logged in 
@@ -29,6 +29,19 @@ include('server.php');
     <!-- uses current system time in style.css call to ensure current updates without browser cache-->
     <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
     <style>
+        <!-- Alert custom style -->
+        <?php include 'css/alert.css'; ?>
+
+        #modalContainer {
+            background-color: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            z-index: 10000;
+        }
+
         #forum {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
@@ -38,21 +51,24 @@ include('server.php');
     <!-- Language Filter -->
     <script type="text/javascript">
         function language_filter(el){
-            var text_area = document.getElementById(el);
-            var regex = /death|murder|kill|dead/gi;
-            if(text_area.value.search(regex) > -1) {
+            let text_area = document.getElementById(el);
+            let regex = /death|murder|kill|dead/gi;
+
+            if (text_area.value.search(regex) > -1) {
                 text_area.value = text_area.value.replace(regex, "");
+                window.alert("The word you have entered has been removed, due to inappropriate language."); // Custom alert
+
             }
         }
     </script>
 </head>
 <body>
 <div class="header">
-    <a href="#default" class="logo">Reply to:  <?php echo $_SESSION['temptopic'];?></a>
+    <a class="logo">Reply to:  <?php echo $_SESSION['temptopic'];?></a>
     <div class="header-right">
         <a class="active" href="index.php">Home</a>
-        <a href="home_forum.php?refresh='1'">Forum</a>
-        <a href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>">Back</a>
+        <a class="active" href="home_forum.php?refresh='1'">Forum</a>
+        <a class="active" href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>">Back</a>
         <a href="index.php?logout='1'">Logout</a>
     </div>
 </div>
@@ -94,12 +110,4 @@ include('server.php');
 
 </form>
 </body>
-<!-- TODO: Remove when everyone test
-<div class="footer">
-    <p style="text-align:left;"><a href="topic_forum.php?topic=<?php echo $_SESSION['temptopic']?>" style="color: white;">BACK</a>
-
-        <span style="float:right;"><a href="index.php?logout='1'" style="color: white;">LOGOUT</a></span>
-    </p>
-</div>
--->
 </html>

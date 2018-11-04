@@ -20,9 +20,11 @@ if (!isset($_SESSION['username'])) {
 }
 
 //forces home forum to refresh the table if accessed from the back link instead of a button
+if (isset($_GET['refresh'])){
 @ $_SESSION['refresh'] = $_GET['refresh'];
 //calls server.php again now that $_SESSION['refresh'] is set 
 @ include('server.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,14 +42,14 @@ if (!isset($_SESSION['username'])) {
         }
 
         #forum td, #forum th {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px;
-            color: #212121;
+            border: 1px solid #FFFFFF;
+            padding: 20px;
+            color: black;
         }
 
         #forum tr:nth-child(even) {
-            border: 1px solid dodgerblue;
-            color: #212121;}
+            border: 1px solid #FFFFFF;
+            color: black;}
         }
 
         #forum th {
@@ -55,33 +57,35 @@ if (!isset($_SESSION['username'])) {
             padding-bottom: 12px;
             text-align: left;
             border: 2px solid;
-            border-color: dodgerblue;
+            border-color: #FFFFFF;
             background-color: rgba(0, 0, 0, 0.0);
-            color: #212121;
+            color: black;
             font-size: 18px;
             font-weight: bold;
         }
-        tr:hover {
+        td:hover {
             border: 1px #dddddd;
-            background-color: #dddddd;
-            color: dodgerblue;
-        }    }
+            background-color: dodgerblue;
+        }
+     }
 
     </style>
 </head>
 <body>
 <div class="header">
-    <a href="#default" class="logo">Forum</a>
+    <a class="logo">Forum</a>
     <div class="header-right">
         <a class="active" href="index.php">Home</a>
+        <a class="active" href="new_topic.php">New Topic</a>
+        <a class="active" href="search.php">Search</a>
         <a href="index.php?logout='1'">Logout</a>
     </div>
 </div>
 <form method="post" action="new_topic.php?<?php echo time(); ?>">
     <table id="forum">
         <col width="80%"><col width="20%">
-        <tr><th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">Topic (most recent on top)</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">Time of most recent post</th></tr>
+        <tr><th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">Topic (most recent on top)</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">Time of most recent post</th></tr>
 
         <?php
         echo $_SESSION['mainforum'];
@@ -99,11 +103,20 @@ if (!isset($_SESSION['username'])) {
     </script>
 
     <br>
+    <!-- remove these buttons after header buttons tested more
     <div class="flex-container">
         <div class="input-group">
             <button type="submit" class="btn" name="new_topic1">New Topic</button>
         </div>
     </div>
+</form>
+<form method="post" action="search.php?">
+    <div class="flex-container">
+        <div class="input-group">
+            <button type="submit" class="btn" id="searchButton" name="search">SEARCH</button>
+        </div>
+    </div>
+    -->
 </form>
 </body>
 <!-- TODO: Remove when everyone test

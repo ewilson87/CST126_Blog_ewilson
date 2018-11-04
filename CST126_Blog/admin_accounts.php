@@ -19,13 +19,14 @@ if (!isset($_SESSION['username'])) {
     header('location: login.php');
 }
 
-//forces home forum to refresh the table if accessed from the back link instead of a button
-//@ $_SESSION['refreshAccounts'] = $_GET['refreshAccounts'];
 
-//if (isset($_GET['refreshAccounts'])){
+
+if (isset($_GET['refreshAccounts'])){
+//forces accounts to refresh the table after changes made
+@ $_SESSION['refreshAccounts'] = $_GET['refreshAccounts'];
 //calls server.php again now that $_SESSION['refreshAccounts'] is set 
-//@ include('server.php');
-//}
+@ include('server.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,18 +39,19 @@ if (!isset($_SESSION['username'])) {
         #forum {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
+            font-weight: bold;
             width: 100%;
         }
 
         #forum td, #forum th {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px;
-            color: #212121;
+            border: 1px solid #FFFFFF;
+            padding: 20px;
+            color: black;
         }
 
         #forum tr:nth-child(even) {
-            border: 1px solid dodgerblue;
-            color: #212121;}
+            border: 1px solid #FFFFFF;
+            color: black;}
         }
 
         #forum th {
@@ -57,17 +59,18 @@ if (!isset($_SESSION['username'])) {
             padding-bottom: 12px;
             text-align: left;
             border: 2px solid;
-            border-color: dodgerblue;
+            border-color: #FFFFFF;
             background-color: rgba(0, 0, 0, 0.0);
-            color: #212121;
+            color: black;
             font-size: 18px;
             font-weight: bold;
         }
-        tr:hover {
+        td:hover {
             border: 1px #dddddd;
-            background-color: #dddddd;
-            color: dodgerblue;
-        }    }
+            background-color: dodgerblue;
+        }
+        }
+
 
     </style>
 
@@ -84,7 +87,7 @@ if (!isset($_SESSION['username'])) {
 <body>
 <!-- Implement new header -->
 <div class="header">
-    <a href="#default" class="logo">ADMINISTRATION OF USER ACCOUNTS</a>
+    <a class="logo">ADMINISTRATION OF USER ACCOUNTS</a>
     <div class="header-right">
         <a class="active" href="index.php">Home</a>
         <a href="index.php?logout='1'">Logout</a>
@@ -109,13 +112,13 @@ if (!isset($_SESSION['username'])) {
 
 <form method="post" action="admin_accounts.php">
     <table id="forum">
-        <tr><th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">USERNAME</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">FIRST NAME</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">LAST NAME</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">E-MAIL</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">MEMBER SINCE</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">SUSPENDED</th>
-            <th style="border: 1px solid rgba(255, 255, 255, 0.3); font-weight: bold; background-color: #dddddd; color: dodgerblue">ACCESS LVL</th></tr>
+        <tr><th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">USERNAME</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">FIRST NAME</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">LAST NAME</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">E-MAIL</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">MEMBER SINCE</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">SUSPENDED</th>
+            <th style="border-bottom: 3px solid dodgerblue; padding-left: 20px; font-size: 22px; font-weight: bold; background-color: #FFFFFF; color: dodgerblue">ACCESS LVL</th></tr>
 
         <?php
         echo $_SESSION['accountsList'];
@@ -133,6 +136,15 @@ if (!isset($_SESSION['username'])) {
                 <input type="text" name="accountUsername" placeholder="USERNAME">
                 <br>
                 <br>
+                <div class="radio">
+                <input type="radio" name="accountAction" value="suspendAccount" checked="checked"> Suspend Account<br>
+                <input type="radio" name="accountAction" value="enableAccount"> Enable Account<br>
+                <input type="radio" name="accountAction" value="moderatorAccount"> Make Moderator<br>
+                <input type="radio" name="accountAction" value="userAccount"> Remove Moderator<br>
+                <input type="radio" name="accountAction" value="deleteAccount"> Delete Account<br>
+            </div>
+                <button type="submit" class="btn" name="changeAccount">Submit</button>
+        <!--
         <button type="submit" class="btn" name="suspendAccount">SUSPEND</button>            
         <button type="submit" class="btn" name="enableAccount">ENABLE</button>
         <br>
@@ -142,7 +154,9 @@ if (!isset($_SESSION['username'])) {
         <br>
         <br>
         <button type="submit" class="btn" name="deleteAccount">DELETE</button>
+    -->
         <label>WARNING: DELETE CANNOT BE UNDONE</label>
+    
     </div>
 
     </div>

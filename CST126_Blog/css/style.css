@@ -8,15 +8,15 @@
  * Site was used in initial development of application with many changes implemented.
  */
 
- * {
+* {
     margin: 0px;
     padding: 0px;
 }
 /** Background **/
 body {
-    color: #000000;
-    background-color:#f1f1f1;
-    font-weight: bold;
+    color: #ffffff;
+    background-color:#FFFFFF;
+    font-weight: bolder;
     font-family:helvetica;
 }
 /** TODO: Delete when everyone test
@@ -39,38 +39,55 @@ body {
 /* Style the header with a grey background and some padding */
 .header {
     overflow: hidden;
-    background-color: #dddddd;
+    background-color: dodgerblue;
     padding: 20px 10px;
 }
 
 /* Style the header links */
 .header a {
     float: left;
-    color: black;
-    text-align: center;
+    color: white;
     padding: 12px;
     text-decoration: none;
     font-size: 18px;
     line-height: 25px;
     border-radius: 4px;
+    font-weight: bolder;
 }
 
 /* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
 .header a.logo {
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 40px;
+    font-weight: bolder;
+}
+.header a.logo:hover {
+    color: white;
+    background-color: dodgerblue;
 }
 
 /* Change the background color on mouse-over */
 .header a:hover {
-    background-color: #ddd;
-    color: black;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    border-radius: 25px;
 }
 
 /* Style the active/current link*/
 .header a.active {
-    background-color: dodgerblue;
-    color: white;
+    background-color: #FFFFFF;
+    color: dodgerblue;
+    border-radius: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* Style the active/current link*/
+.header a.active:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    border-radius: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /* Float the link section to the right */
@@ -89,13 +106,13 @@ body {
         float: none;
     }
 }
-
+/* Body */
 form, .content {
     text-align: center;
     width: 100%;
     margin: 0px auto;
-    background-color: #f1f1f1;
-    color: dodgerblue;
+    color: black;
+    font-size: 18px;
     border-radius: 0px 0px 0px 0px;
 }
 .input-group {
@@ -188,16 +205,20 @@ input:-webkit-autofill
 }
 .btn {
     padding: 10px;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
-    border-radius: 5px;
-    border: 1px #dddddd;
-    background-color: #dddddd;
+    background-color: white;
     color: dodgerblue;
+    border-radius: 25px;
+    border: 2px solid dodgerblue; /* Green */
 }
 .btn:hover {
-    color: #212121;
+    font-weight: bold;
+    font-size: 22px;
+    background-color: dodgerblue;
+    color: #FFFFFF;
 }
+
 /* Button ripple Effect */
 button{
     position: relative;
@@ -216,6 +237,24 @@ button:after {
     transform: scale(1, 1) translate(-50%);
     transform-origin: 50% 50%;
 }
+button{
+    position: relative;
+    overflow: hidden;
+}
+.btn:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: dodgerblue;
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
 @keyframes ripple {
     0% {
         transform: scale(0, 0);
@@ -240,6 +279,9 @@ button:focus:not(:active)::after {
 
 div.a {
     text-align: left;
+    justify-content: left;
+    align-items: left;
+    align-content: space-between;
 }
 
 div.b {
@@ -260,3 +302,10 @@ table, th, td {
     text-align: left;
 }
 
+.radio{
+    text-align: left;
+    justify-content: left;
+    align-items: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}

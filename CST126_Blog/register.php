@@ -8,6 +8,7 @@
  * References: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
  * Site was used in initial development of application with many changes implemented.
  */
+include('alert.php'); // Include custom alert script
 include('server.php') ?>
 <!DOCTYPE html>
 <html>
@@ -15,8 +16,23 @@ include('server.php') ?>
     <title>Register New User Account</title>
     <!-- uses current system time in style.css call to ensure current updates without browser cache-->
     <link rel="stylesheet" type="text/css" href="css/style.css?<?php echo time(); ?>">
+    <style>
+        <!-- Alert custom style -->
+        <?php include 'css/alert.css'; ?>
+
+        #modalContainer {
+            background-color: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            z-index: 10000;
+        }
+
+    </style>
     <div class="header">
-        <a href="#default" class="logo">Register New User Account</a>
+        <a class="logo">Register New User Account</a>
         <div class="header-right">
             <a class="active" href="login.php">Sign In</a>
         </div>
@@ -24,10 +40,13 @@ include('server.php') ?>
     <!-- Language Filter -->
     <script type="text/javascript">
         function language_filter(el){
-            var text_area = document.getElementById(el);
-            var regex = /death|murder|kill|dead/gi;
-            if(text_area.value.search(regex) > -1) {
+            let text_area = document.getElementById(el);
+            let regex = /death|murder|kill|dead/gi;
+
+            if (text_area.value.search(regex) > -1) {
                 text_area.value = text_area.value.replace(regex, "");
+                window.alert("The word you have entered has been removed, due to inappropriate language."); // Custom alert
+
             }
         }
     </script>
@@ -52,8 +71,8 @@ include('server.php') ?>
             <label>Username</label>
             <!-- Implement language filter in username -->
             <input
-                    class="ta" id="ta" name="ta"
-                    onkeyup="language_filter('ta')" onkeydown="language_filter('ta')"
+                    class="text" id="text"
+                    onkeyup="language_filter('text')"
                     type="text" name="username" value="<?php echo $username; ?>" required="true">
         </div>
         <div class="input-group">
@@ -78,12 +97,5 @@ include('server.php') ?>
     </div>
 
 </form>
-<!-- TODO: Remove when everyone test
-<div class="footer">
-    <p>
-        Already registered? <a href="login.php" style="color: white;">Sign in</a>
-    </p>
-</div>
--->
 </body>
 </html>
